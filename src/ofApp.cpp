@@ -1,67 +1,70 @@
 #include "ofApp.h"
 #include <chrono>
 #include <thread>
-#include <lunasvg/include/lunasvg.h>
 #include <stb/stb_image_write.h>
-
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //using namespace std::chrono;
-    //using namespace std::this_thread;
-    using namespace lunasvg;
     
-    auto document = Document::loadFromFile("laberinto.svg");
-    auto bitmap = document->renderToBitmap();
-
-    // do something useful with the bitmap here.
-    using namespace Aspose::Words;
-
-    auto doc = MakeObject<Document>();
-    auto builder = MakeObject<DocumentBuilder>(doc);
-
-    auto shape = builder->InsertImage(u"Input.svg");
-    shape->get_ImageData()->Save(u"Output.png");
-
-
     ofBackground(255);
     
-    //system("cd /Users/santi/Documents/Master/GC/of_v0.11.2_osx_release/apps/myApps/practica1/bin/data ; ./mazegen");
-    //sleep_for(seconds(1));
-    //img.load("laberinto.svg");
-    img.load(svgToBMP("/Users/santi/Documents/Master/GC/of_v0.11.2_osx_release/apps/myApps/practica1/bin/data", 1000, 1000, 0));
+    system("cd /Users/santi/Documents/Master/GC/of_v0.11.2_osx_release/apps/myApps/MazeGame/bin/data ; ./mazegen ; qlmanage -t -s 1000 -o . maze.svg ");
+    img.load("maze.svg.png");
+    
+    startTime = 0;
+    elapsedTime = 0;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-}
-
-const char* svgToBMP(std::string svgfilepath, std::uint32_t width, std::uint32_t height, std::uint32_t bgcolor) 
-{
-    std::string filename = "laberinto.svg";
-    auto document = lunasvg::Document::loadFromFile(svgfilepath);
-    auto bitmap = document->renderToBitmap(width, height, bgcolor);
-    auto basename = filename.substr(filename.find_last_of("/\\") + 1);
-    basename.append(".bmp");
-    stbi_write_bmp(basename.c_str(), int(bitmap.width()), int(bitmap.height()), 4, bitmap.data());
-
-    return NULL;
+    elapsedTime = ofGetElapsedTimeMillis() - startTime;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPushMatrix();
-    ofScale(0.5, 0.5);
-    ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.5/2), (ofGetHeight()/2)-(img.getHeight()*0.5/2));
-    img.draw();
+    ofSetColor(ofColor::white);
+    ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
+    ofScale(0.7, 0.7);      //0.8 queda justo en la ventana
+    img.draw(0, 0);
     ofPopMatrix();
     
-    ofSetColor(ofColor::red);
-    p1.draw();
-    
+    ofPushMatrix();
     ofSetColor(ofColor::blue);
+    ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
+    ofScale(0.7, 0.7);
+    p1.draw();
+    ofPopMatrix();
+    
+    ofPushMatrix();
+    ofSetColor(ofColor::red);
+    ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
+    ofScale(0.7, 0.7);
     p2.draw();
+    ofPopMatrix();
+    
+    /*for (int i = 0; i < img.getHeight(); i++){
+        for (int j = 0; j < img.getWidth(); j++){
+            ofColor col = img.getColor(j, i);
+
+            col.r = round(((double)col.r)/ 255) * 255;
+            col.g = round(((double)col.g)/ 255) * 255;
+            col.b = round(((double)col.b)/ 255) * 255;
+            
+
+            img.setColor(j, i, col);
+        }
+    }*/
+    
+    ofColor col;
+    col.r = 255;
+    col.g = 0;
+    col.b = 0;
+    img.setColor(200, 200, col);
+    img.update();
+    
+    ofDrawBitmapString("Tiempo transcurrido: " + ofToString(elapsedTime), 10, 20);
     
     /*ofScale(0.7, 0.7);
     ofSetColor(0);
@@ -73,14 +76,18 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    cout << key << endl;
+    //cout << key << endl;
     if((key == 119) || (key == 97) || (key == 115) || (key == 100)){
-        cout << key << endl;
+        //cout << key << endl;
         p1.move(key);
     }
     if((key == 105) || (key == 106) || (key == 107) || (key == 108)){
-        cout << key << endl;
+        //cout << key << endl;
         p2.move(key);
+    }
+    
+    if (key == ' ') {
+        startTime = ofGetElapsedTimeMillis();
     }
 }
 
@@ -130,6 +137,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }

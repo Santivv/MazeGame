@@ -2,7 +2,7 @@
 //  player.hpp
 //  practica1
 //
-//  Created by Santi Vicente on 11/3/23.
+//  Created by Carlos Escribano and Santi Vicente on 11/3/23.
 //
 
 #ifndef player_hpp
@@ -28,6 +28,10 @@ public:
     virtual void update();
     virtual void draw();
     virtual void move(char key);
+    virtual bool checkPosition(int move);
+    
+    ofImage img;
+    int radius = 15;
     
 };
 
