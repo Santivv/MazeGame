@@ -10,10 +10,7 @@
 
 #include <stdio.h>
 #include "ofMain.h"
-
-struct coords{
-    float x, y;
-};
+#include "coords.h"
 
 class player{
 protected:
@@ -33,6 +30,7 @@ public:
     virtual void move(char key);
     virtual bool checkPosition(int move);
     virtual bool checkGoal();
+    virtual bool checkPower(coords posPower);
     
     ofImage img;
     int radius = 15;

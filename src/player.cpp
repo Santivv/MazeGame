@@ -22,7 +22,6 @@ player::player(int x, int y, int id){
     position.x = x;
     position.y = y;
     this->id = id;
-    cout << "ID: " + ofToString(id) << endl;
 }
 
 void player::update(){
@@ -120,3 +119,9 @@ bool player::checkGoal(){
     return false;
 }
 
+bool player::checkPower(coords posPower){
+    if ((position.x >= posPower.x-8 && position.x <= posPower.x+8) && (position.y >= posPower.y-8 && position.y <= posPower.y+8)){
+        return true;
+    }
+    return false;
+}

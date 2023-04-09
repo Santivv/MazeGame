@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include "player.hpp"
+#include "power.hpp"
+#include "coords.h"
 
 class ofApp : public ofBaseApp{
     
@@ -27,12 +29,16 @@ class ofApp : public ofBaseApp{
         void gotMessage(ofMessage msg);
     
     void raffleKeys();
+    bool checkWhite(float x, float y);
+    void choosePowerUp(player owner, player enemy, int id);
     
     States state;
     
     ofImage img;
     player p1 = player(25, 933, 1);
     player p2 = player(974, 70, 2);
+    //power r[3];
+    vector<power> r;
     
     unsigned long startTime; // Tiempo en milisegundos desde que se inició el cronómetro
     unsigned long elapsedTime; // Tiempo transcurrido desde que se inició el cronómetro

@@ -14,13 +14,25 @@ void ofApp::setup(){
     
     startTime = 0;
     elapsedTime = 0;
+    
+    float rx, ry;
+    for(int i=0;i<3;i++){
+        do{
+            rx = ofRandom(65, img.getWidth()-65);
+            ry = ofRandom(65, img.getWidth()-65);
+        } while(!checkWhite(rx, ry));
+        
+        r.push_back(power(rx, ry, i));
+    }
+    
     state = playing;
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    elapsedTime = ofGetElapsedTimeMillis() - startTime;
+    if (state == playing){
+        elapsedTime = ofGetElapsedTimeMillis() - startTime;
+    }
     if ((elapsedTime/1000)%10 == 0){
         raffleKeys();
     }
@@ -58,6 +70,28 @@ void ofApp::update(){
         winner = p2.getID();
         state = finish;
     }
+    
+    coords posPower;
+    for(int i=0;i<r.size();i++){
+        posPower = r[i].getPosition();
+        if (p1.checkPower(posPower)){
+            if (r.size() > 1){
+                choosePowerUp(p1, p2, r[i].getID());
+                r.erase(r.begin()+i);
+            } else {
+                choosePowerUp(p1, p2, r[i].getID());
+                r.clear();
+            }
+        } else if (p2.checkPower(posPower)){
+            if (r.size() > 1){
+                choosePowerUp(p2, p1, r[i].getID());
+                r.erase(r.begin()+i);
+            } else {
+                choosePowerUp(p2, p1, r[i].getID());
+                r.clear();
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -66,20 +100,27 @@ void ofApp::draw(){
     
     if (state == playing){
         ofPushMatrix();
-        ofSetColor(ofColor::white);
-        ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
-        /*ofTranslate(img.getWidth()*0.7/2, img.getHeight()*0.7/2);
-        ofRotateDeg(90);
-        ofTranslate(-img.getWidth()*0.7/2, -img.getHeight()*0.7/2);*/
-        ofScale(0.7, 0.7);      //0.8 queda justo en la ventana
         
-        img.draw(0, 0);
+            ofSetColor(ofColor::white);
+            ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
+            /*ofTranslate(img.getWidth()*0.7/2, img.getHeight()*0.7/2);
+            ofRotateDeg(90);
+            ofTranslate(-img.getWidth()*0.7/2, -img.getHeight()*0.7/2);*/
+            ofScale(0.7, 0.7);      //0.8 queda justo en la ventana
+            
+            img.draw(0, 0);
+            
+            ofSetColor(ofColor::green);
+            for(int i=0;i<r.size();i++){
+                r[i].draw();
+            }
+            
+            ofSetColor(ofColor::blue);
+            p1.draw();
 
-        ofSetColor(ofColor::blue);
-        p1.draw();
-
-        ofSetColor(ofColor::red);
-        p2.draw();
+            ofSetColor(ofColor::red);
+            p2.draw();
+        
         ofPopMatrix();
         
         ofSetColor(ofColor::black);
@@ -90,7 +131,7 @@ void ofApp::draw(){
         }
     } else if(state == finish){
         ofBackground(255);
-        ofDrawBitmapString(ofToString(seconds), ofGetWidth()/2-10, ofGetHeight()-20);
+        ofDrawBitmapString("Player " + ofToString(winner) + " wins in " + ofToString(seconds) + " seconds", ofGetWidth()/2-50, ofGetHeight()/2-5);
     }
     
 }
@@ -160,6 +201,29 @@ void ofApp::raffleKeys(){
     std::shuffle(keys_player2.begin(), keys_player2.end(), g);
 }
 
+bool ofApp::checkWhite(float x, float y){
+    ofColor col;
+    col = img.getColor(x, y);
+    
+    if (col == ofColor::white){
+        return true;
+    }
+    return false;
+}
+
+void ofApp::choosePowerUp(player owner, player enemy, int id){
+    switch(id){
+        case 0:
+            cout << "Putada 1" << endl;
+            break;
+        case 1:
+            cout << "Putada 2" << endl;
+            break;
+        case 2:
+            cout << "Putada 3" << endl;
+            break;
+    }
+}
 
 /*for (int i = 0; i < img.getHeight(); i++){
  for (int j = 0; j < img.getWidth(); j++){
