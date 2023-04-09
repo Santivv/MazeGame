@@ -15,6 +15,7 @@
 class player{
 protected:
     coords position;
+    coords entrada;
     int id;
     
 public:
@@ -27,14 +28,16 @@ public:
     virtual void draw();
     virtual void setPosition(int x, int y);
     virtual int getID();
+    virtual void setForward(float dif);
     virtual void move(char key);
     virtual bool checkPosition(int move);
     virtual bool checkGoal();
     virtual bool checkPower(coords posPower);
+    virtual void returnToStart();
     
     ofImage img;
     int radius = 15;
-    float forward = 1.5;
+    float forward;
     
 };
 

@@ -29,15 +29,15 @@ class ofApp : public ofBaseApp{
         void gotMessage(ofMessage msg);
     
     void raffleKeys();
+    void standardKeys();
     bool checkWhite(float x, float y);
-    void choosePowerUp(player owner, player enemy, int id);
+    void choosePowerUp(player* owner, player* enemy, int id);
     
     States state;
     
     ofImage img;
     player p1 = player(25, 933, 1);
     player p2 = player(974, 70, 2);
-    //power r[3];
     vector<power> r;
     
     unsigned long startTime; // Tiempo en milisegundos desde que se inició el cronómetro
@@ -47,5 +47,6 @@ class ofApp : public ofBaseApp{
     vector<char> keys_player2 = {'i', 'j', 'k', 'l'};
     
     int winner;
+    int rotate = 0;
 
 };

@@ -21,7 +21,10 @@ player::player(int x, int y, int id){
     cout << "Constructor de GameObject 2" << endl;
     position.x = x;
     position.y = y;
+    entrada.x = x;
+    entrada.y = y;
     this->id = id;
+    forward = 1.5;
 }
 
 void player::update(){
@@ -39,6 +42,10 @@ void player::setPosition(int x, int y){
 
 int player::getID(){
     return id;
+}
+
+void player::setForward(float dif){
+    forward = forward + dif;
 }
 
 /*
@@ -120,8 +127,13 @@ bool player::checkGoal(){
 }
 
 bool player::checkPower(coords posPower){
-    if ((position.x >= posPower.x-8 && position.x <= posPower.x+8) && (position.y >= posPower.y-8 && position.y <= posPower.y+8)){
+    if ((position.x >= posPower.x && position.x <= posPower.x+15) && (position.y >= posPower.y && position.y <= posPower.y+15)){
         return true;
     }
     return false;
+}
+
+void player::returnToStart(){
+    position.x = entrada.x;
+    position.y = entrada.y;
 }

@@ -25,9 +25,7 @@ power::power(int x, int y, int id){
 }
 
 void power::draw(){
-    ofSetRectMode(OF_RECTMODE_CENTER);
     ofDrawRectangle(position.x, position.y, width, height);
-    ofSetRectMode(OF_RECTMODE_CORNER);
 }
 
 coords power::getPosition(){

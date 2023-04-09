@@ -33,8 +33,13 @@ void ofApp::update(){
     if (state == playing){
         elapsedTime = ofGetElapsedTimeMillis() - startTime;
     }
-    if ((elapsedTime/1000)%10 == 0){
-        raffleKeys();
+    if (elapsedTime%15000 <= 50){
+        if (ofRandom(2) > 1){
+            raffleKeys();
+        } else {
+            rotate++;
+            standardKeys();
+        }
     }
     
     if (ofGetKeyPressed('w')) {
@@ -76,18 +81,18 @@ void ofApp::update(){
         posPower = r[i].getPosition();
         if (p1.checkPower(posPower)){
             if (r.size() > 1){
-                choosePowerUp(p1, p2, r[i].getID());
+                choosePowerUp(&p1, &p2, r[i].getID());
                 r.erase(r.begin()+i);
             } else {
-                choosePowerUp(p1, p2, r[i].getID());
+                choosePowerUp(&p1, &p2, r[i].getID());
                 r.clear();
             }
         } else if (p2.checkPower(posPower)){
             if (r.size() > 1){
-                choosePowerUp(p2, p1, r[i].getID());
+                choosePowerUp(&p2, &p1, r[i].getID());
                 r.erase(r.begin()+i);
             } else {
-                choosePowerUp(p2, p1, r[i].getID());
+                choosePowerUp(&p2, &p1, r[i].getID());
                 r.clear();
             }
         }
@@ -103,9 +108,11 @@ void ofApp::draw(){
         
             ofSetColor(ofColor::white);
             ofTranslate((ofGetWidth()/2)-(img.getWidth()*0.7/2), (ofGetHeight()/2)-(img.getHeight()*0.7/2));
-            /*ofTranslate(img.getWidth()*0.7/2, img.getHeight()*0.7/2);
-            ofRotateDeg(90);
-            ofTranslate(-img.getWidth()*0.7/2, -img.getHeight()*0.7/2);*/
+            for(int i=0;i<rotate;i++){
+                ofTranslate(img.getWidth()*0.7/2, img.getHeight()*0.7/2);
+                ofRotateDeg(90);
+                ofTranslate(-img.getWidth()*0.7/2, -img.getHeight()*0.7/2);
+            }
             ofScale(0.7, 0.7);      //0.8 queda justo en la ventana
             
             img.draw(0, 0);
@@ -126,12 +133,16 @@ void ofApp::draw(){
         ofSetColor(ofColor::black);
         ofDrawBitmapString(ofToString(seconds), ofGetWidth()/2-10, ofGetHeight()-20);
         
-        if (seconds%10 == 0){
-            ofDrawBitmapString("Cambio de direccion", ofGetWidth()/2+10, ofGetHeight()-20);
+        if (seconds%15 == 0){
+            if (rotate){
+                ofDrawBitmapString("Rotación del laberinto", ofGetWidth()/2+10, ofGetHeight()-20);
+            } else {
+                ofDrawBitmapString("Cambio de controles", ofGetWidth()/2+10, ofGetHeight()-20);
+            }
         }
     } else if(state == finish){
         ofBackground(255);
-        ofDrawBitmapString("Player " + ofToString(winner) + " wins in " + ofToString(seconds) + " seconds", ofGetWidth()/2-50, ofGetHeight()/2-5);
+        ofDrawBitmapString("Player " + ofToString(winner) + " wins in " + ofToString(seconds) + " seconds", ofGetWidth()/2-100, ofGetHeight()/2-5);
     }
     
 }
@@ -201,53 +212,39 @@ void ofApp::raffleKeys(){
     std::shuffle(keys_player2.begin(), keys_player2.end(), g);
 }
 
+void ofApp::standardKeys(){
+    keys_player1 = {'w', 'a', 's', 'd'};
+    keys_player2 = {'i', 'j', 'k', 'l'};
+}
+
 bool ofApp::checkWhite(float x, float y){
-    ofColor col;
-    col = img.getColor(x, y);
+    ofColor col[5];
     
-    if (col == ofColor::white){
+    col[0] = img.getColor(x, y);
+    col[1] = img.getColor(x+15, y);
+    col[2] = img.getColor(x, y+15);
+    col[3] = img.getColor(x+15, y+15);
+    col[4] = img.getColor(x+7.5, y+7.5);
+    if (col[0] == ofColor::white && col[1] == ofColor::white && col[2] == ofColor::white && col[03] == ofColor::white && col[4] == ofColor::white){
         return true;
     }
+    
     return false;
 }
 
-void ofApp::choosePowerUp(player owner, player enemy, int id){
+void ofApp::choosePowerUp(player* owner, player* enemy, int id){
     switch(id){
         case 0:
             cout << "Putada 1" << endl;
+            owner->setForward(1);
             break;
         case 1:
             cout << "Putada 2" << endl;
+            enemy->setForward(-0.5);
             break;
         case 2:
             cout << "Putada 3" << endl;
+            enemy->returnToStart();
             break;
     }
 }
-
-/*for (int i = 0; i < img.getHeight(); i++){
- for (int j = 0; j < img.getWidth(); j++){
- ofColor col = img.getColor(j, i);
- 
- col.r = round(((double)col.r)/ 255) * 255;
- col.g = round(((double)col.g)/ 255) * 255;
- col.b = round(((double)col.b)/ 255) * 255;
- 
- 
- img.setColor(j, i, col);
- }
- }
- 
- ofColor col;
- col.r = 255;
- col.g = 0;
- col.b = 0;
- img.setColor(200, 200, col);
- img.update();*/
-
-/*ofScale(0.7, 0.7);
-ofSetColor(0);
-for(auto path: img.getPaths()){
-    cout << path.isFilled() << endl;
-    path.draw();
-}*/
