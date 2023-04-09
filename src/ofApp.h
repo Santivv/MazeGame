@@ -2,16 +2,18 @@
 
 #include "ofMain.h"
 #include "player.hpp"
-#include "ofxSVG.h"
 
 class ofApp : public ofBaseApp{
+    
+    enum States {
+        playing, finish
+    };
 
     public:
         void setup();
         void update();
         void draw();
-    //const char* svgToBMP(std::string svgfilepath, std::uint32_t width, std::uint32_t height, std::uint32_t bgcolor);
-
+    
         void keyPressed(int key);
         void keyReleased(int key);
         void mouseMoved(int x, int y );
@@ -24,11 +26,20 @@ class ofApp : public ofBaseApp{
         void dragEvent(ofDragInfo dragInfo);
         void gotMessage(ofMessage msg);
     
+    void raffleKeys();
+    
+    States state;
+    
     ofImage img;
-    player p1, p2;
+    player p1 = player(25, 933, 1);
+    player p2 = player(974, 70, 2);
     
     unsigned long startTime; // Tiempo en milisegundos desde que se inició el cronómetro
     unsigned long elapsedTime; // Tiempo transcurrido desde que se inició el cronómetro
-
+    
+    vector<char> keys_player1 = {'w', 'a', 's', 'd'};
+    vector<char> keys_player2 = {'i', 'j', 'k', 'l'};
+    
+    int winner;
 
 };

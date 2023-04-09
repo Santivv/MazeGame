@@ -18,20 +18,25 @@ struct coords{
 class player{
 protected:
     coords position;
+    int id;
     
 public:
     
     player();
-    ~player();
-    player(int x, int y);
+    //~player();
+    player(int x, int y, int id);
     
     virtual void update();
     virtual void draw();
+    virtual void setPosition(int x, int y);
+    virtual int getID();
     virtual void move(char key);
     virtual bool checkPosition(int move);
+    virtual bool checkGoal();
     
     ofImage img;
     int radius = 15;
+    float forward = 1.5;
     
 };
 

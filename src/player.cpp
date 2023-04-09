@@ -8,19 +8,21 @@
 #include "player.hpp"
 
 player::player(){
-    cout << "Constructor de GameObject" << endl;
+    cout << "Constructor de GameObject 1" << endl;
     position.x = 0;
     position.y = 0;
 }
 
-player::~player(){
+/*player::~player(){
     cout << "Destructor de GameObject" << endl;
-}
+}*/
 
-player::player(int x, int y){
-    cout << "Constructor de GameObject" << endl;
+player::player(int x, int y, int id){
+    cout << "Constructor de GameObject 2" << endl;
     position.x = x;
     position.y = y;
+    this->id = id;
+    cout << "ID: " + ofToString(id) << endl;
 }
 
 void player::update(){
@@ -29,6 +31,15 @@ void player::update(){
 
 void player::draw(){
     ofDrawCircle(position.x, position.y, radius);
+}
+
+void player::setPosition(int x, int y){
+    position.x = x;
+    position.y = y;
+}
+
+int player::getID(){
+    return id;
 }
 
 /*
@@ -43,16 +54,16 @@ bool player::checkPosition(int move){
     
     switch(move){
         case 0:
-            col = img.getColor(position.x, position.y-radius-3);
+            col = img.getColor(position.x, position.y-radius-forward);
             break;
         case 1:
-            col = img.getColor(position.x-radius-3, position.y);
+            col = img.getColor(position.x-radius-forward, position.y);
             break;
         case 2:
-            col = img.getColor(position.x, position.y+radius+3);
+            col = img.getColor(position.x, position.y+radius+forward);
             break;
         case 3:
-            col = img.getColor(position.x+radius+3, position.y);
+            col = img.getColor(position.x+radius+forward, position.y);
             break;
     }
     
@@ -67,27 +78,45 @@ void player::move(char key){
     switch(key){
         case 'w':
         case 'i':
-            if (checkPosition(0)){
-                position.y = position.y-3;
+            if (checkPosition(0) && position.y>50){
+                position.y = position.y-forward;
             }
             break;
         case 'a':
         case 'j':
             if (checkPosition(1)){
-                position.x = position.x-3;
+                position.x = position.x-forward;
             }
             break;
         case 's':
         case 'k':
-            if (checkPosition(2)){
-                position.y = position.y+3;
+            if (checkPosition(2) && position.y<950){
+                position.y = position.y+forward;
             }
             break;
         case 'd':
         case 'l':
             if (checkPosition(3)){
-                position.x = position.x+3;
+                position.x = position.x+forward;
             }
             break;
     }
 }
+
+bool player::checkGoal(){
+    switch(id){
+        case 1:
+            if (position.x > 970){
+                return true;
+            }
+            break;
+        case 2:
+            if (position.x < 25){
+                return true;
+            }
+            break;
+    }
+    
+    return false;
+}
+
