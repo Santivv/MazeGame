@@ -20,7 +20,7 @@ protected:
 public:
     
     power();
-    //~power();
+    ~power();
     power(int x, int y, int id);
     
     virtual void draw();

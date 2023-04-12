@@ -35,9 +35,11 @@ class ofApp : public ofBaseApp{
     
     States state;
     
+    int p1x = 25, p1y = 933, p2x = 974, p2y = 70;
+    
     ofImage img;
-    player p1 = player(25, 933, 1);
-    player p2 = player(974, 70, 2);
+    player p1 = player(p1x, p1y, 1);
+    player p2 = player(p2x, p2y, 2);
     vector<power> r;
     
     unsigned long startTime; // Tiempo en milisegundos desde que se inició el cronómetro

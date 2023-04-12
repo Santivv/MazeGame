@@ -68,6 +68,33 @@ void ofApp::update(){
         p2.move(keys_player2[3]);
     }
     
+    if (ofGetKeyPressed(' ') && state == finish) {
+        system("cd /Users/santi/Documents/Master/GC/of_v0.11.2_osx_release/apps/myApps/MazeGame/bin/data ; ./mazegen ; qlmanage -t -s 1000 -o . maze.svg ");
+        img.load("maze.svg.png");
+        
+        p1.returnToStart();
+        p1.setForward(1.5);
+        p2.returnToStart();
+        p2.setForward(1.5);
+        
+        rotate = 0;
+        startTime = ofGetElapsedTimeMillis();
+        standardKeys();
+        
+        r.clear();
+        float rx, ry;
+        for(int i=0;i<3;i++){
+            do{
+                rx = ofRandom(65, img.getWidth()-65);
+                ry = ofRandom(65, img.getWidth()-65);
+            } while(!checkWhite(rx, ry));
+            
+            r.push_back(power(rx, ry, i));
+        }
+        
+        state = playing;
+    }
+    
     if (p1.checkGoal()){
         winner = p1.getID();
         state = finish;
@@ -113,7 +140,7 @@ void ofApp::draw(){
                 ofRotateDeg(90);
                 ofTranslate(-img.getWidth()*0.7/2, -img.getHeight()*0.7/2);
             }
-            ofScale(0.7, 0.7);      //0.8 queda justo en la ventana
+            ofScale(0.7, 0.7);
             
             img.draw(0, 0);
             
@@ -121,6 +148,12 @@ void ofApp::draw(){
             for(int i=0;i<r.size();i++){
                 r[i].draw();
             }
+        
+            ofSetColor(ofColor::blue);
+            ofDrawRectangle(p2x-20, p2y-20, 40, 40);
+        
+            ofSetColor(ofColor::red);
+            ofDrawRectangle(p1x-20, p1y-20, 40, 40);
             
             ofSetColor(ofColor::blue);
             p1.draw();
@@ -143,6 +176,7 @@ void ofApp::draw(){
     } else if(state == finish){
         ofBackground(255);
         ofDrawBitmapString("Player " + ofToString(winner) + " wins in " + ofToString(seconds) + " seconds", ofGetWidth()/2-100, ofGetHeight()/2-5);
+        ofDrawBitmapString("Press SPACE to restart", ofGetWidth()/2-100, ofGetHeight()/2+15);
     }
     
 }
@@ -203,11 +237,9 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 void ofApp::raffleKeys(){
-    // Obtener un generador de números aleatorios
     std::random_device rd;
     std::mt19937 g(rd());
     
-    // Barajar los elementos de keys
     std::shuffle(keys_player1.begin(), keys_player1.end(), g);
     std::shuffle(keys_player2.begin(), keys_player2.end(), g);
 }
@@ -235,15 +267,12 @@ bool ofApp::checkWhite(float x, float y){
 void ofApp::choosePowerUp(player* owner, player* enemy, int id){
     switch(id){
         case 0:
-            cout << "Putada 1" << endl;
-            owner->setForward(1);
+            owner->setForward(2.5);
             break;
         case 1:
-            cout << "Putada 2" << endl;
-            enemy->setForward(-0.5);
+            enemy->setForward(1);
             break;
         case 2:
-            cout << "Putada 3" << endl;
             enemy->returnToStart();
             break;
     }

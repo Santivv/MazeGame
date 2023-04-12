@@ -21,7 +21,7 @@ protected:
 public:
     
     player();
-    //~player();
+    ~player();
     player(int x, int y, int id);
     
     virtual void update();

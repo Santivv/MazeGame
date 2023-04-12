@@ -8,17 +8,17 @@
 #include "player.hpp"
 
 player::player(){
-    cout << "Constructor de GameObject 1" << endl;
+    cout << "Constructor de Player 1" << endl;
     position.x = 0;
     position.y = 0;
 }
 
-/*player::~player(){
-    cout << "Destructor de GameObject" << endl;
-}*/
+player::~player(){
+    cout << "Destructor de Player" << endl;
+}
 
 player::player(int x, int y, int id){
-    cout << "Constructor de GameObject 2" << endl;
+    cout << "Constructor de Player 2" << endl;
     position.x = x;
     position.y = y;
     entrada.x = x;
@@ -45,7 +45,7 @@ int player::getID(){
 }
 
 void player::setForward(float dif){
-    forward = forward + dif;
+    forward = dif;
 }
 
 /*
