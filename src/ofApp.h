@@ -27,6 +27,7 @@ class ofApp : public ofBaseApp{
         void windowResized(int w, int h);
         void dragEvent(ofDragInfo dragInfo);
         void gotMessage(ofMessage msg);
+    void exit();
     
     void raffleKeys();
     void standardKeys();
@@ -50,5 +51,8 @@ class ofApp : public ofBaseApp{
     
     int winner;
     int rotate = 0;
+    bool control = false;
+    
+    ofSoundPlayer soundPlayer;
 
 };

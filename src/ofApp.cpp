@@ -26,6 +26,11 @@ void ofApp::setup(){
     }
     
     state = playing;
+    
+    soundPlayer.load("rick.mpeg");
+    soundPlayer.setLoop(true);
+    soundPlayer.play();
+    ofResetElapsedTimeCounter();
 }
 
 //--------------------------------------------------------------
@@ -33,13 +38,17 @@ void ofApp::update(){
     if (state == playing){
         elapsedTime = ofGetElapsedTimeMillis() - startTime;
     }
-    if (elapsedTime%15000 <= 50){
+    if ((elapsedTime/1000)%15 == 0 && control){
         if (ofRandom(2) > 1){
             raffleKeys();
         } else {
             rotate++;
             standardKeys();
         }
+        control = false;
+    }
+    if ((elapsedTime/1000)%15 == 1){
+        control = true;
     }
     
     if (ofGetKeyPressed('w')) {
@@ -236,6 +245,10 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }
 
+void ofApp::exit(){
+    soundPlayer.stop();
+}
+
 void ofApp::raffleKeys(){
     std::random_device rd;
     std::mt19937 g(rd());
@@ -277,3 +290,4 @@ void ofApp::choosePowerUp(player* owner, player* enemy, int id){
             break;
     }
 }
+
